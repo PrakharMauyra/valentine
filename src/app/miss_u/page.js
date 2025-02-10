@@ -30,22 +30,6 @@ const MissYouPage = () => {
 
 
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const future = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
-      const diff = future - now;
-
-      setTimeLeft({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((diff % (1000 * 60)) / 1000)
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   // Handle heart click
   const handleHeartClick = () => {

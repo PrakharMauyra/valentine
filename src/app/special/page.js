@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Heart } from "lucide-react";
-import Image from "next/image";
+// import Image from 'next/image';
 
 // Bubble Hearts Utility
 const random = {
@@ -209,7 +209,7 @@ const TributePage = () => {
           />
 
           <div className="absolute inset-2 rounded-full overflow-hidden bg-white shadow-xl">
-            <Image
+            <img
               src="/img1.jpeg"
               alt="Special Someone"
               width={320}
