@@ -1,101 +1,138 @@
-import Image from "next/image";
+"use client";
+import React, { useState, useRef, useEffect } from 'react';
 
-export default function Home() {
+function HomePage() {
+  const [isPlaying, setIsPlaying] = useState(false); // Start with music paused
+  const [hoveredSection, setHoveredSection] = useState(null);
+  const audioRef = useRef(null); // Reference to the audio element
+  const [isFirstInteraction, setIsFirstInteraction] = useState(true); // Track first interaction
+
+  // Handle play/pause logic
+  const toggleMusic = async () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause(); // Pause the music
+      } else {
+        try {
+          await audioRef.current.play(); // Play the music
+        } catch (error) {
+          console.error("Error playing audio:", error);
+        }
+      }
+      setIsPlaying(!isPlaying); // Toggle the state
+    }
+  };
+
+  // Handle first user interaction
+  const handleFirstInteraction = async () => {
+    if (isFirstInteraction) {
+      try {
+        await audioRef.current.play(); // Play the music on first interaction
+        setIsPlaying(true);
+        setIsFirstInteraction(false); // Mark that the first interaction has happened
+      } catch (error) {
+        console.error("Error playing audio on first interaction:", error);
+      }
+    }
+  };
+
+  // Ensure audio is loaded and ready
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.load(); // Preload the audio
+    }
+  }, []);
+
+  const specialNavItems = [
+    { href: '/love_letter', text: 'Love Letter', icon: '✍️' },
+    { href: '/miss_u', text: 'Miss You', icon: '🥹' },
+    { href: '/special', text: 'Another message', icon: '🎁' },
+    { href: '/forever', text: 'Forever Yours', icon: '🌙' },
+  ];
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div
+      className="min-h-screen bg-gradient-to-br from-pink-100 via-red-50 to-pink-100 flex flex-col items-center justify-center p-8 cursor-heart"
+      onClick={handleFirstInteraction} // Trigger on any click in the container
+    >
+      {/* Welcome Message */}
+      <div className="text-center mb-16 animate-fade-in">
+        <h1 className="text-5xl md:text-7xl font-bold text-red-600 mb-6">
+          Happy Valentine&apos;s Day! 💝
+        </h1>
+        <p className="text-2xl md:text-3xl text-pink-700 font-light">
+          To our love and friendship
+        </p>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      {/* Special Features Navigation */}
+      <div
+        className="w-full max-w-5xl transition-transform duration-300"
+        onMouseEnter={() => setHoveredSection('special')}
+        onMouseLeave={() => setHoveredSection(null)}
+      >
+        <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">
+          Card made with ❤️
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {specialNavItems.map((item, index) => (
+            <NavButton
+              key={`special-${index}`}
+              href={item.href}
+              text={item.text}
+              icon={item.icon}
+              delay={(specialNavItems.length + index) * 0.1}
+              special={true}
+              dimmed={hoveredSection === 'main'}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      {/* Music Toggle */}
+      <button
+        onClick={toggleMusic}
+        className="fixed bottom-8 right-8 p-5 rounded-full bg-white/90 backdrop-blur-sm 
+          shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+        aria-label="Toggle Music"
+      >
+        <span className="text-3xl">{isPlaying ? '🎵' : '🔇'}</span>
+      </button>
+
+      {/* Audio Element */}
+      <audio ref={audioRef} loop>
+        <source src="/love_song.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
     </div>
   );
 }
+
+function NavButton({ href, text, icon, delay, special, dimmed }) {
+  return (
+    <a
+      href={href}
+      className={`
+        p-8 rounded-2xl shadow-md hover:shadow-xl
+        transform hover:-translate-y-2 transition-all duration-300
+        text-lg font-semibold text-center
+        flex flex-col items-center justify-center gap-4
+        ${special 
+          ? 'bg-gradient-to-br from-red-50 to-pink-50 hover:from-red-100 hover:to-pink-100 border-2 border-red-200'
+          : 'bg-white hover:bg-pink-50 border-2 border-pink-200'
+        }
+        ${dimmed ? 'opacity-50' : 'opacity-100'}
+        animate-fade-in-up
+      `}
+      style={{
+        animationDelay: `${delay}s`,
+        animationFillMode: 'forwards'
+      }}
+    >
+      <span className="text-4xl">{icon}</span>
+      <span className={`${special ? 'text-red-600' : 'text-pink-600'}`}>{text}</span>
+    </a>
+  );
+}
+
+export default HomePage;
