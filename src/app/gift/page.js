@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Image from 'next/image';
 
 const ImageFrame = () => {
   return (
@@ -14,7 +15,7 @@ const ImageFrame = () => {
         
         {/* Image Container */}
         <div className="absolute inset-4 rounded-xl overflow-hidden">
-          <img
+          <Image
             src="/api/placeholder/400/400"
             alt="Special Someone"
             className="w-full h-full object-cover"

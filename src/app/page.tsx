@@ -6,6 +6,7 @@ function HomePage() {
   const [hoveredSection, setHoveredSection] = useState(null);
   const audioRef = useRef(null); // Reference to the audio element
   const [isFirstInteraction, setIsFirstInteraction] = useState(true); // Track first interaction
+  const [isClient, setIsClient] = useState(false); // Track if the component is on the client
 
   // Handle play/pause logic
   const toggleMusic = async () => {
@@ -36,8 +37,9 @@ function HomePage() {
     }
   };
 
-  // Ensure audio is loaded and ready
+  // Ensure audio is loaded and ready (client-side only)
   useEffect(() => {
+    setIsClient(true); // Set isClient to true after mount
     if (audioRef.current) {
       audioRef.current.load(); // Preload the audio
     }
@@ -99,11 +101,13 @@ function HomePage() {
         <span className="text-3xl">{isPlaying ? '🎵' : '🔇'}</span>
       </button>
 
-      {/* Audio Element */}
-      <audio ref={audioRef} loop>
-        <source src="/love_song.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
+      {/* Audio Element (client-side only) */}
+      {isClient && (
+        <audio ref={audioRef} loop>
+          <source src="/love_song.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      )}
     </div>
   );
 }

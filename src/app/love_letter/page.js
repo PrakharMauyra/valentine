@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link'
 
 function LoveLetter() {
   const [isUnwrapped, setIsUnwrapped] = useState(false);
@@ -88,12 +89,12 @@ No matter where life takes us, know this: my love for you is unwavering, a flame
 
         {/* Return button */}
         <div className="mt-8 text-center">
-          <a
+          <Link
             href="/"
             className="inline-block px-6 py-3 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition-colors duration-300 shadow-md"
           >
             Return Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
